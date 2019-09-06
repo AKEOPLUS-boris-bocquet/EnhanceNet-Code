@@ -8,6 +8,7 @@ from math import floor
 from PIL import Image
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 import tensorflow as tf
+import imageio
 
 """ helper functions """
 def loadimg(fn, scale=4):
@@ -24,8 +25,23 @@ def saveimg(img, filename):
     img = 255*np.copy(img)
     if len(np.shape(img)) > 2 and np.shape(img)[2] == 1:
         img = np.reshape(img, (np.shape(img)[0], np.shape(img)[1]))
-    img = scipy.misc.toimage(img, cmin=0, cmax=255)
-    scipy.misc.imsave(filename, img)
+    
+    #For Scipy < V1.2
+    #img = scipy.misc.toimage(img, cmin=0, cmax=255)
+    #scipy.misc.imsave(filename, img)
+    
+    #BB20190906
+    #For Scipy V>=1.2, Use Pillow’s Image.fromarray directly instead.
+    #https://docs.scipy.org/doc/scipy-1.2.0/reference/generated/scipy.misc.toimage.html
+    #same remarks for imsave : they recommand to use imageio.imwrite
+    #https://docs.scipy.org/doc/scipy-1.2.0/reference/generated/scipy.misc.imsave.html?highlight=imsave#scipy.misc.imsave    
+    #This is not as straightforward has the website says : you have to scale and convert type before
+    
+    img = np.interp(img, (img.min(), img.max()), (0, 255))
+    img = img.astype(np.ubyte, copy=False)
+    img = Image.fromarray(img)
+    imageio.imwrite(filename, img)
+    
 
 """ neural network layers """
 def conv(h, n=64):
