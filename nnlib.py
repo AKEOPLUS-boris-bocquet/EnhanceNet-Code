@@ -37,10 +37,14 @@ def saveimg(img, filename):
     #https://docs.scipy.org/doc/scipy-1.2.0/reference/generated/scipy.misc.imsave.html?highlight=imsave#scipy.misc.imsave    
     #This is not as straightforward has the website says : you have to scale and convert type before
     
-    img = np.interp(img, (img.min(), img.max()), (0, 255))
-    img = img.astype(np.ubyte, copy=False)
-    img = Image.fromarray(img)
+    #imgScaled = np.interp(img, (img.min(), img.max()), (0, 255))
+    #print('type imgScaled ', type(imgScaled))
+    #imgByte = imgScaled.astype(np.ubyte)
+    #print('type imgScaled ', type(imgScaled))
+    #imgPil = Image.fromarray(imgByte)
+    #imageio.imwrite(filename, imgByte)
     imageio.imwrite(filename, img)
+
     
 
 """ neural network layers """

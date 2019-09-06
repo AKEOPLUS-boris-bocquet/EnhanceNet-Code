@@ -11,7 +11,7 @@ for fn in fns:
     if os.path.isfile('output/%s-EnhanceNet.png' % fne):
         print('skipping %s' % fn)
         continue
-    imgs = loadimg('input/'+fn)
+    imgs = loadimg('input/'+fn, scale=1)
     if imgs is None:
         continue
     imgs = np.expand_dims(imgs, axis=0)
