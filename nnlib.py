@@ -35,16 +35,15 @@ def saveimg(img, filename):
     #https://docs.scipy.org/doc/scipy-1.2.0/reference/generated/scipy.misc.toimage.html
     #same remarks for imsave : they recommand to use imageio.imwrite
     #https://docs.scipy.org/doc/scipy-1.2.0/reference/generated/scipy.misc.imsave.html?highlight=imsave#scipy.misc.imsave    
-    #This is not as straightforward has the website says : you have to scale and convert type before
-    
-    #imgScaled = np.interp(img, (img.min(), img.max()), (0, 255))
-    #print('type imgScaled ', type(imgScaled))
-    #imgByte = imgScaled.astype(np.ubyte)
-    #print('type imgScaled ', type(imgScaled))
-    #imgPil = Image.fromarray(imgByte)
-    #imageio.imwrite(filename, imgByte)
-    imageio.imwrite(filename, img)
+    #This is not as straightforward has the website says : 
+    #to avoid an auto scale from imageio.imwrite, you have to convert your image before
+    #I have compared the results ouputs of this new version w.r.t scipy.misc.toimage + scipy.misc.imsave
+    #and I have the same results. I sometime have a grayvalue difference of 1 (out of 256). Maybe because of rounding. Does not matter much.
 
+    img = np.round(img)
+    img = np.clip(img, 0, 255)
+    bytedata_uint8 = img.astype(np.uint8)
+    imageio.imwrite(filename, bytedata_uint8)
     
 
 """ neural network layers """
